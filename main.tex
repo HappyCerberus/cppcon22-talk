@@ -1,0 +1,112 @@
+\documentclass{beamer}
+
+\usepackage{fontspec}
+\usepackage{microtype}
+\setmonofont{JetBrainsMono}[
+    Path=./static/fonts/jetbrains/,
+    Scale=0.85,
+    Extension = .ttf,
+    UprightFont=*-Regular,
+    BoldFont=*-Bold,
+    ItalicFont=*-Italic,
+    BoldItalicFont=*-BoldItalic
+    ]
+    
+\setsansfont{Asap}[
+    Path=./static/fonts/asap/,
+    Scale=0.9,
+    Extension = .ttf,
+    UprightFont=*-Regular,
+    BoldFont=*-Bold,
+    ItalicFont=*-Italic,
+    BoldItalicFont=*-BoldItalic
+    ]
+    
+\usepackage[newfloat=true]{minted}
+
+\beamertemplatenavigationsymbolsempty
+
+\setbeameroption{hide notes} % Only slides
+%\setbeameroption{show only notes} % Only notes
+%\setbeameroption{show notes on second screen=bottom}
+
+
+\title{The Dark Corner of STL: MinMax Algorithms}
+\author{Šimon Tóth}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Links}
+\note{
+Add link to slides.
+Add link to book.
+Add twitter \& stuff.
+}
+\end{frame}
+
+\begin{frame}[plain,c]
+\note{
+At the beginning of this talk was a startling realization.
+After I just finished writing my C++ algorithms book, I tried to summarize the most error prone parts of STL.
+Strangely enough, I came to conclusion that the most complicated part of STL are actually the min max algorithms.
+In this talk I would like to guide you through the sharp corners of both the language and the library and provide some guidance on how to avoid these sharp corners and also how to design similar functions in a more error-prone way.
+}
+\end{frame}
+
+\begin{frame}[plain,c]
+\note{
+Before we properly start, I would like to ask that you keep the questions until the end of the talk.
+This talk is only 30 minutes long and there is also a good chance that your question will be answered on following few slides.
+}
+\end{frame}
+
+\begin{frame}{Prior art}
+\note{
+Before we start I need to point you to another talk from doctor Walter Brown: Correctly calculating min, max and more.
+That talk explores the algorithmic complexities of correctly implementing min and max and also dives into the complexities of correctly implementing less than.
+In summary the talk explores "how do you correctly implement min, max algorithms?".
+}
+\end{frame}
+
+\begin{frame}[plain,c]
+\begin{center}
+    \huge How hard is it to call \texttt{std::min}?
+\end{center}
+\note{
+However, the question I want to ask and answer in this talk is a different one.
+How hard is it to call \texttt{std::min}?
+}
+\end{frame}
+
+\begin{frame}[fragile,plain,c]
+\begin{minted}[escapeinside=||]{c++}
+auto min = std::min(1, 2);
+// min == 1, decltype(min) == int
+
+auto max = std::max(1, 2);
+// max == 2, decltype(max) == int
+
+auto clamped = std::clamp(0, 1, 2);
+// clamped == 1, decltype(clamped) == int
+
+auto minmax = std::minmax(1, 2);
+// ???
+// decltype(minmax) == std::pair<const int&, const int&>
+\end{minted}
+\note[item]{OK. I have to admit, I'm misdirecting you a little bit. Frankly, calling \texttt{std::min} is quite easy.}
+\note[item]{And this is true also for \texttt{std::max} and \texttt{std::clamp}.}
+\note[item]{However, something different happens when we call \texttt{std::minmax}.}
+\note[item]{We end up with a dangling reference.}
+\end{frame}
+
+\begin{frame}[fragile,plain,c]
+\begin{itemize}
+    \item \texttt{auto}
+    \item \texttt{reference semantics}
+\end{itemize}
+\note[item]{There are two language features at play here.}
+\end{frame}
+
+\end{document}
