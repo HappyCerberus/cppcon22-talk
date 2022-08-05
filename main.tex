@@ -1,7 +1,9 @@
 \documentclass{beamer}
 
+\usepackage{hyperref}
 \usepackage{fontspec}
 \usepackage{microtype}
+
 \setmonofont{JetBrainsMono}[
     Path=./static/fonts/jetbrains/,
     Scale=0.85,
@@ -26,9 +28,9 @@
 
 \beamertemplatenavigationsymbolsempty
 
-\setbeameroption{hide notes} % Only slides
+%\setbeameroption{hide notes} % Only slides
 %\setbeameroption{show only notes} % Only notes
-%\setbeameroption{show notes on second screen=bottom}
+\setbeameroption{show notes on second screen=left}
 
 
 \title{The Dark Corner of STL: MinMax Algorithms}
@@ -39,6 +41,7 @@
 \frame{\titlepage}
 
 \begin{frame}{Links}
+\Large\href{https://github.com/HappyCerberus/cppcon22-talk}{https://github.com/HappyCerberus/cppcon22-talk}
 \note{
 Add link to slides.
 Add link to book.
